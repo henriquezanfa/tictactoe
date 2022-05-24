@@ -17,7 +17,6 @@ class AppThemeData {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(colors.primary),
           padding: MaterialStateProperty.all(const EdgeInsets.all(10)),
           textStyle: MaterialStateProperty.all(
             const TextStyle(

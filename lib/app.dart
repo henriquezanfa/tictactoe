@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tictactoe/commons/constants/themes.dart';
+import 'package:tictactoe/core/routes.dart';
+import 'package:tictactoe/domain/model/game_model.dart';
 import 'package:tictactoe/features/board/board_screen.dart';
-import 'package:tictactoe/features/home/home_screen.dart';
+import 'package:tictactoe/features/home/ui/home_screen.dart';
 import 'package:tictactoe/features/splash/splash_screen.dart';
 
 class TicTacToeApp extends StatelessWidget {
@@ -12,20 +14,16 @@ class TicTacToeApp extends StatelessWidget {
     return MaterialApp(
       theme: AppThemeData().themeData,
       onGenerateRoute: (settings) {
-        Widget route = Container(
-          height: 50,
-          width: 50,
-          color: Colors.green,
-        );
+        Widget route = const Offstage(); // TODO: implement an error page
         switch (settings.name) {
-          case '/':
+          case TTTRoutes.splash:
             route = const SplashScreen();
             break;
-          case '/home':
+          case TTTRoutes.home:
             route = const HomeScreen();
             break;
-          case '/board':
-            route = const BoardScreen();
+          case TTTRoutes.board:
+            route = BoardScreen(game: settings.arguments as Game);
             break;
         }
         return MaterialPageRoute(builder: (context) => route);

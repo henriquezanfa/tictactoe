@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tictactoe/commons/commons.dart';
+import 'package:tictactoe/domain/model/game_model.dart';
 
 class BoardScreen extends StatefulWidget {
-  const BoardScreen({Key? key}) : super(key: key);
+  final Game game;
+
+  const BoardScreen({Key? key, required this.game}) : super(key: key);
 
   @override
   State<BoardScreen> createState() => _BoardScreenState();
@@ -18,7 +21,7 @@ class _BoardScreenState extends State<BoardScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const ScoreWidget(),
+              ScoreWidget(game: widget.game),
               BoardWidget(),
               const Offstage(),
             ],
@@ -30,8 +33,11 @@ class _BoardScreenState extends State<BoardScreen> {
 }
 
 class ScoreWidget extends StatelessWidget {
+  final Game game;
+
   const ScoreWidget({
     Key? key,
+    required this.game,
   }) : super(key: key);
 
   @override
@@ -60,7 +66,7 @@ class ScoreWidget extends StatelessWidget {
             children: [
               Icon(Icons.close, color: colors.text),
               Text(
-                'player 1',
+                game.firstPlayer.name,
                 style: TextStyle(
                   color: colors.text,
                   fontWeight: FontWeight.bold,
@@ -84,7 +90,7 @@ class ScoreWidget extends StatelessWidget {
                 color: colors.text,
               ),
               Text(
-                'player 2',
+                game.secondPlayer.name,
                 style: TextStyle(
                   color: colors.text,
                   fontWeight: FontWeight.bold,
