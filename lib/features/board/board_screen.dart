@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tictactoe/commons/commons.dart';
+import 'package:tictactoe/domain/enum/indicator_enum.dart';
+import 'package:tictactoe/domain/model/cell_model.dart';
 import 'package:tictactoe/domain/model/game_model.dart';
 
 class BoardScreen extends StatefulWidget {
@@ -22,8 +24,11 @@ class _BoardScreenState extends State<BoardScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               ScoreWidget(game: widget.game),
-              BoardWidget(),
-              const Offstage(),
+              BoardWidget(game: widget.game),
+              TextButton(
+                onPressed: () => setState(() => widget.game.restart()),
+                child: const Text('RESTART'),
+              ),
             ],
           ),
         ),
@@ -61,6 +66,17 @@ class ScoreWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
+          SizedBox(
+            width: 30,
+            child: Text(
+              '${game.firstPlayer.score}',
+              style: TextStyle(
+                color: colors.text,
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+              ),
+            ),
+          ),
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -98,18 +114,37 @@ class ScoreWidget extends StatelessWidget {
               ),
             ],
           ),
+          SizedBox(
+            width: 30,
+            child: Text(
+              '${game.secondPlayer.score}',
+              style: TextStyle(
+                color: colors.text,
+                fontWeight: FontWeight.bold,
+                fontSize: 24,
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class BoardWidget extends StatelessWidget {
-  final colors = TTTColors();
+class BoardWidget extends StatefulWidget {
+  final Game game;
 
-  BoardWidget({
+  const BoardWidget({
     Key? key,
+    required this.game,
   }) : super(key: key);
+
+  @override
+  State<BoardWidget> createState() => _BoardWidgetState();
+}
+
+class _BoardWidgetState extends State<BoardWidget> {
+  final colors = TTTColors();
 
   Widget xIcon({bool winner = false}) {
     return Icon(
@@ -140,36 +175,28 @@ class BoardWidget extends StatelessWidget {
           width: 5,
         ),
       ),
-      child: GridView.count(
+      child: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+        ),
         padding: const EdgeInsets.all(2),
         shrinkWrap: true,
+        itemCount: widget.game.board.length,
         physics: const NeverScrollableScrollPhysics(),
-        crossAxisCount: 3,
-        children: [
-          /// 1 line
-          TTTCell(
-            content: oIcon(winner: true),
-            winnerCell: true,
-          ),
-          TTTCell(content: xIcon()),
-          const TTTCell(),
-
-          /// 2 line
-          TTTCell(content: xIcon()),
-          TTTCell(
-            content: oIcon(winner: true),
-            winnerCell: true,
-          ),
-          TTTCell(content: xIcon()),
-
-          /// 3 line
-          TTTCell(content: oIcon()),
-          const TTTCell(),
-          TTTCell(
-            content: oIcon(winner: true),
-            winnerCell: true,
-          ),
-        ],
+        itemBuilder: (_, index) {
+          final cell = widget.game.board[index];
+          return GestureDetector(
+            onTap: () => setState(() => widget.game.makePlay(index)),
+            child: cell is EmptyCell
+                ? const TTTCell()
+                : TTTCell(
+                    content: cell.player.indicator == IndicatorEnum.o
+                        ? oIcon(winner: cell.winner)
+                        : xIcon(winner: cell.winner),
+                    winnerCell: cell.winner,
+                  ),
+          );
+        },
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:tictactoe/commons/commons.dart';
 import 'package:tictactoe/core/routes.dart';
+import 'package:tictactoe/domain/enum/indicator_enum.dart';
 import 'package:tictactoe/domain/model/game_model.dart';
 import 'package:tictactoe/domain/model/player_model.dart';
 import 'package:tictactoe/features/home/store/home_store.dart';
@@ -72,8 +73,8 @@ class HomeActions extends StatelessWidget {
     ).then((value) {
       if (value) {
         final game = Game(
-          Player(store.firstPlayerName!),
-          Player(store.secondPlayerName!),
+          Player(store.firstPlayerName!, IndicatorEnum.x),
+          Player(store.secondPlayerName!, IndicatorEnum.o),
         );
 
         Navigator.of(context).pushNamed(TTTRoutes.board, arguments: game);
