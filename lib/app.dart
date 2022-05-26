@@ -12,6 +12,7 @@ class TicTacToeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: AppThemeData().themeData,
       onGenerateRoute: (settings) {
         Widget route = const Offstage(); // TODO: implement an error page

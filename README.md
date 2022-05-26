@@ -1,16 +1,19 @@
-# tictactoe
+# TTT - TIC TAC TOE
 
-A new Flutter project.
+This is a Tic Tac Toe game implemented with flutter.
+
+<img src="assets/preview.png" width="350" title="hover text" alt="preview">
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+- This project was done on **Flutter 2.10.0** version.
+- It is using [mobx](https://pub.dev/packages/mobx) to handle the state management.
 
-A few resources to get you started if this is your first Flutter project:
+### Architecture
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+I used a feature based arch, where I tried to split the features according to it corresponding screen.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The game logic is on the **domain** layer (more espcifically, on
+the [Game](https://github.com/henriquezanfa/tictactoe/blob/master/lib/domain/model/game_model.dart) file). This file has
+some [unit tests](https://github.com/henriquezanfa/tictactoe/blob/master/test/domain/model/game_test.dart) covering the
+basic cases of the game.
