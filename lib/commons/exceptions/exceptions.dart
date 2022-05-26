@@ -6,3 +6,12 @@ class CellNotEmptyException implements Exception {
   @override
   String toString() => error;
 }
+
+class EndGameException implements Exception {
+  final String error;
+
+  EndGameException({this.error = 'The game has ended'});
+
+  @override
+  String toString() => error;
+}

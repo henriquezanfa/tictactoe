@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tictactoe/commons/constants/themes.dart';
 import 'package:tictactoe/core/routes.dart';
 import 'package:tictactoe/domain/model/game_model.dart';
-import 'package:tictactoe/features/board/board_screen.dart';
+import 'package:tictactoe/features/board/ui/board_screen.dart';
 import 'package:tictactoe/features/home/ui/home_screen.dart';
 import 'package:tictactoe/features/splash/splash_screen.dart';
 

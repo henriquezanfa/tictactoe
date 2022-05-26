@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:tictactoe/commons/exceptions/exceptions.dart';
 import 'package:tictactoe/domain/model/cell_model.dart';
 import 'package:tictactoe/domain/model/player_model.dart';
@@ -8,34 +9,44 @@ class Game {
 
   Player _currentPlayer;
   Player? _winner;
+  bool _isDraw = false;
 
   Player get currentPlayer => _currentPlayer;
-
   Player? get winner => _winner;
+  bool get isDraw => _isDraw;
+  bool get hasEnded => winner != null || isDraw;
 
   final List<Cell> board = List.filled(9, EmptyCell());
 
   Game(this.firstPlayer, this.secondPlayer) : _currentPlayer = firstPlayer;
 
   void makePlay(int index) {
-    if (board[index] is EmptyCell) {
-      board[index] = Cell(_currentPlayer, false);
-      final isWinner = _isWinPlay(_currentPlayer, index);
-      if (isWinner) {
-        _currentPlayer.incrementScore();
-        _winner = _currentPlayer;
+    if (!hasEnded) {
+      if (board[index] is EmptyCell) {
+        board[index] = Cell(_currentPlayer, false);
+        final isWinner = _isWinPlay(_currentPlayer, index);
+        if (isWinner) {
+          _currentPlayer.incrementScore();
+          _winner = _currentPlayer;
+        }
+        _changePlayer();
+      } else {
+        throw CellNotEmptyException();
       }
-      _changePlayer();
     } else {
-      throw CellNotEmptyException();
+      throw EndGameException();
     }
+
+    _checkDraw();
   }
 
   void restart() {
-    _currentPlayer = firstPlayer;
     for (int i = 0; i < board.length; i++) {
       board[i] = EmptyCell();
     }
+    _winner = null;
+    _currentPlayer = firstPlayer;
+    _checkDraw();
   }
 
   void _changePlayer() {
@@ -44,6 +55,14 @@ class Game {
     } else {
       _currentPlayer = firstPlayer;
     }
+  }
+
+  /// Check if any of the cells is a [EmptyCell] and [winner] is null.
+  bool _checkDraw() {
+    _isDraw =
+        board.firstWhereOrNull((x) => x is EmptyCell) == null && winner == null;
+
+    return _isDraw;
   }
 
   void _setWinnerCells(int firstIndex, int secondIndex, int thirdIndex) {

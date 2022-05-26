@@ -26,7 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               const Offstage(), // So that the logo is vertetically centered
               const TTTLogo(),
@@ -49,20 +49,12 @@ class HomeActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () => _onTapNewGame(context),
-            child: const Text("NEW GAME"),
-          ),
-        ),
-        TextButton(
-          onPressed: () {},
-          child: const Text('STATS'),
-        ),
-      ],
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () => _onTapNewGame(context),
+        child: const Text("NEW GAME"),
+      ),
     );
   }
 
@@ -70,16 +62,26 @@ class HomeActions extends StatelessWidget {
     showCupertinoModalBottomSheet(
       context: context,
       builder: (_) => PlayersNamesModal(store: store),
-    ).then((value) {
-      if (value) {
-        final game = Game(
-          Player(store.firstPlayerName!, IndicatorEnum.x),
-          Player(store.secondPlayerName!, IndicatorEnum.o),
-        );
+    ).then(
+      (value) {
+        if (value != null) {
+          final game = Game(
+            Player(store.firstPlayerName!, IndicatorEnum.x),
+            Player(store.secondPlayerName!, IndicatorEnum.o),
+          );
+          store.clear();
 
-        Navigator.of(context).pushNamed(TTTRoutes.board, arguments: game);
-      }
-      store.clear();
-    });
+          Navigator.of(context)
+              .pushNamed(TTTRoutes.board, arguments: game)
+              .then((value) {
+            // If returns true, should start a new game
+            if (value != null && value == true) {
+              store.clear();
+              _onTapNewGame(context);
+            }
+          });
+        }
+      },
+    );
   }
 }
